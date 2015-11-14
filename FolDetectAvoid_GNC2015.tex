@@ -1,0 +1,140 @@
+\documentclass[]{aiaa-tc}% insert '[draft]' option to show overfull boxes
+
+\usepackage{amssymb}
+\usepackage[intlimits,cmex10]{amsmath}
+%\usepackage{txfonts}
+%\usepackage{overpic}
+\usepackage{float}
+\usepackage{subfig}% subcaptions for subfigures
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{psfrag}
+%\usepackage[nolists,nomarkers]{endfloat}
+\usepackage{afterpage}
+\usepackage[colorlinks]{hyperref}%  hyperlinks [must be loaded after dropping]
+\usepackage{cite}
+\usepackage{url}
+\usepackage{breakurl}
+\hypersetup{breaklinks=true}
+%\usepackage{refcheck}
+%NEW COMMANDS & ENVIRONMENTS
+%L1 Math and Proofs
+\newcommand{\Lone}{\mathcal{L}_1}
+\newcommand{\Linf}{\mathcal{L}_{\infty}}
+\newcommand{\Lonenorm}[1]{\ensuremath{\left\Vert{#1}\right\Vert_{\mathcal{L}_1}}}
+\newcommand{\Linfnorm}[1]{\ensuremath{\left\Vert{#1}\right\Vert_{\mathcal{L}_{\infty}}}}
+\newcommand{\Linfnormt}[2]{\ensuremath{\left\Vert{#1}_{#2}\right\Vert_{\mathcal{L}_{\infty}}}}
+\newcommand{\lonenorm}[1]{\ensuremath{\Vert{#1}\Vert_{\mathcal{L}_1}}}
+\newcommand{\linfnorm}[1]{\ensuremath{\Vert{#1}\Vert_{\mathcal{L}_{\infty}}}}
+\newcommand{\linfnormt}[2]{\ensuremath{\Vert{#1}_{#2}\Vert_{\mathcal{L}_{\infty}}}}
+\newcommand{\Infnorm}[1]{\ensuremath{\left\Vert{#1}\right\Vert_{\infty}}}
+\newcommand{\Twonorm}[1]{\ensuremath{\left\Vert{#1}\right\Vert_{2}}}
+\newcommand{\infnorm}[1]{\ensuremath{\Vert{#1}\Vert_{\infty}}}
+\newcommand{\twonorm}[1]{\ensuremath{\Vert{#1}\Vert_{2}}}
+
+\newcommand{\trace}[1]{\ensuremath{{\rm tr}\left({#1}\right)}}
+\newcommand{\Proj}[2]{\ensuremath{{\rm Proj}\left({#1},{#2}\right)}}
+%\newcommand{\Proj}[2]{\ensuremath{{\rm Proj}({#1},{#2})}}
+
+\newcommand{\sech}{\ensuremath{\textrm{sech}}}
+\newcommand{\CLRS}{closed-loop reference system~}
+
+\newcommand{\IR}{\mathbb{R}}
+\newcommand{\II}{\mathbb{I}}
+\newcommand{\thetahat}{\hat{\theta}}
+\newcommand{\sigmahat}{\hat{\sigma}}
+\newcommand{\omegahat}{\hat{\omega}}
+\newcommand{\thetatilde}{\tilde{\theta}}
+\newcommand{\sigmatilde}{\tilde{\sigma}}
+\newcommand{\omegatilde}{\tilde{\omega}}
+\newcommand{\rf}{\mathrm{ref}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\xhat}{\hat{x}}
+\newcommand{\xtilde}{\tilde{x}}
+\newcommand{\yhat}{\hat{y}}
+\newcommand{\ytilde}{\tilde{y}}
+
+%TUDelft
+\newcommand{\degr}{^\circ}
+\newcommand{\citep}[1]{\citeleft\citen{#1}\citeright}
+%\newcommand{\citep}[1]{Ref~\citeleft\citen{#1}\citeright}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{pro}{Property}
+\newtheorem{lem}{Lemma}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{asm}{Assumption}
+\newtheorem{rem}{Remark}
+\newenvironment{pf}{\noindent {\bf Proof.}\mbox{}}{\em}
+
+\graphicspath{{./figures/}}
+
+\title{Collision Detection Based On Line-of-Sight Measurement}
+
+\author{
+   Thiago Marinho\thanks{Doctoral Student, Dept. of Mechanical Science and Engineering,Student Member AIAA, marinho@illinois.edu.}~,
+   Arun Lakshmanan\thanks{Master Student, Dept. of Aerospace Engineering,Student Member AIAA lakshma2@illinois.edu.}~,
+    Venanzio Cichella\thanks{Doctoral Student, Dept. of Mechanical Science and Engineering, Student Member AIAA,cichell2@illinois.edu.}~,
+    Naira Hovakimyan\thanks{Professor, Dept. of Mechanical Science and Engineering, Associate Fellow AIAA
+    nhovakim@illinois.edu.}\\
+    {\normalsize\itshape University of Illinois at Urbana-Champaign, Urbana, IL 61801}
+}
+
+% Data used by 'handcarry' option if invoked
+\AIAApapernumber{YEAR-NUMBER}
+\AIAAconference{Guidance, Navigation, and Control, 2013, Boston, Massachusetts, USA}
+\AIAAcopyright{\AIAAcopyrightD{2013}}
+
+
+\begin{document}
+
+\maketitle
+
+%==============================================================================
+\begin{abstract}
+%==============================================================================%
+
+This paper addresses the problem of collision detection for unmanned vehicles. The algorithm relies solely on the line-of-sight angle measurement, which can be obtained from an inertial measurement unit and a gimbaled camera mounted onboard the vehicle. Under given conditions on the estimated line-of-sight rate, the algorithm is capable of predicting whether a collision is likely to occur. The proposed solution is intended to be integrated with a collision avoidance strategy, thus ensuring that the autonomous vehicles can avert collision with cooperative and uncooperative obstacles. This work aims at providing a solution to the detection problem for small low-cost unmanned aerial platforms, which are not equipped with sensors capable of measuring data such as position and velocity of the obstacle.
+\end{abstract}
+
+
+
+%%==============================================================================
+\section{Introduction}
+\label{sec:Introduction}
+Research and development in autonomous systems  has seen an unprecedented growth in the past decade. Examples range from autonomous drones to self-driving cars which can make intelligent decisions based on environmental factors without explicit human control.
+
+In recent years, there has been a growing concern for accidents involving autonomous vehicles. Regulatory agencies such as Federal Aviation Administration (FAA) and National Highway Traffic Safety Administration (NHTSA) have proposed policies, such as the Unmanned Aerial Systems (UAS) roadmap \cite{FAA_UAS} and Policy on Automated Vehicle Development \cite{autodev2014} respectively, to mitigate the accidents which take place every year \cite{FAAaccd2010}. The first UAS Roadmap published by FAA describes the necessity of UAS integration within the National Airspace (NAS) without compromising on safety or increasing the risk to people and properties.
+
+A fundamental component of any autonomous vehicle is its ability to perceive the environment around itself and perform maneuvers to prevent impending collisions with obstacles, may it be with  oncoming vehicles, people, and other hazards. A collision avoidance system should be able to predict and mitigate such a collision with cooperative and uncooperative obstacles.
+
+Collision avoidance problem has received a lot of attention in recent years (see, for example, \cite{khatib96,chakravarthy98,carbone08,smith08,sti10,shankaran2011collision,rodriguez2011collision,mikaCA, gusrialdi2008coverage,laventall2008coverage} and references therein) and is still an active field of research. The importance of an adequate collision avoidance solution is still a limiting factor for the envisioned self driving cars and the autonomous drones.  Nonetheless, the effectiveness of any collision avoidance method is constrained by the capability of detecting the collision reliably with the available hardware.
+
+%Maybe remove this.
+A complete collision avoidance system should contain three elements: (i) sensing, which is the data acquisition capability of the hardware; (ii) detection, a decision making tool capable of predicting whether a collision is expected; (iii) avoidance, which selects and enforces the proper evasive maneuver.
+
+The problem of choosing and designing a collision strategy is not the goal of this work as we focus on the strategy of {\em detecting} probable collisions under restricted {\em sensing} capabilities. Once this detection strategy is in place an adequate avoidance method must be chosen to perform the evasive maneuver. Although most applications of a collision avoidance system involve autonomous vehicle, in the case of non autonomous remotely operated drones or semi-autonomous cars a detection scheme could be used as a trigger alarm to the operator. This might be useful in cases where the operator might not have knowledge of the obstacle due to limited visibility angle (as in the case of a ground operator commanding an unmanned vehicle by vision feedback only and natural obstacles as trees and buildings could impair the operator’s visibility), or just to reduce the operator workload.
+
+One of the main limitations of most detection and avoidance solutions is the assumption that the vehicles have the ability to measure the position and velocity of the obstacles. Usually, this limitation can be circumvented by using a combination of multiple sensors and range-based detection methods, (such as, for example, stereo cameras \cite{BarryT14} \footnote{\url{http://www.intel.com/content/www/us/en/architecture-and-technology/realsense-overview.html}}). For instance, in Google's self-driving car \cite{rathod2013autonomous} \footnote{\url{http://spectrum.ieee.org/automaton/robotics/artificial-intelligence/how-google-self-driving-car-works}} collision avoidance is implemented through ultrasonic sensors, LIDAR sensors, GPS, video camera, and a 64 beam laser sensor to generate a 3D map of the surroundings.
+
+Although these systems provide very reliable and accurate information about the environment, they are often cumbersome, expensive, require precise camera calibration and are computationally intensive, thus demanding powerful microprocessors. On the contrary, economical solutions do not provide reliable estimates about the environment and the obstacles therein. However, these low-cost sensor systems are ubiquitous in most vehicles and better detection algorithms can be made to maximize the information available about the obstacles and any imminent collisions.
+
+The objective of this work is to propose a collision detection solution when monocular vision is the only sensing information available. Most commercially available low cost aerial platforms only have single cameras mounted onboard (e.g. DJI Phantom, Lily, Parrot AR Drone) and developing a detection method for these platforms is the first step to enable true autonomous deconfliction for the low cost market. Present FAA rules require the operator to always control the drone in the visible region, but with an obstacle detection algorithm the operator will have the capability to safely maneuver the drone in vision-occluded areas.
+
+
+With this goal in mind, this paper proposes a solution for the collision detection problem, which is real-time implementable and does not rely on velocity or position information of the obstacle or on its estimate. In fact, we present a collision detection procedure based on the line-of-sight (LOS) rate estimate and the expansion rate of the image. The LOS angle rate can be estimated from the LOS obtained using a dedicated pan-tilt gimbaled camera, which can be built using low-cost commercial off-the-shelf components. In a typical scenario when the unmanned vehicle is moving autonomously, a pan-tilt camera searches for obstacles. Once an obstacle is identified and locked in the camera frame, an image processing algorithm \cite{PerceptiVU} provides the position of the obstacle in the image frame to an integrated UAV-gimbal control algorithm. The latter steers the gimbal to keep the obstacle in the center of the camera frame (e.g. drives the position of the obstacle in the image frame to zero) \cite{dobrokhodov2008vision}. The measurement of the  pan angle of the gimbal is then used by the estimator to compute the LOS rate estimate.
+
+It has been shown that a necessary condition for collision between two obstacles is that the LOS rate is zero \cite{kochenderfer2008hazard}. A common approach is to declare an existing threat of collision whenever the LOS rate goes below a certain (small) threshold value. However, this method presents a large set of false positive scenarios. One example is when the obstacle is moving away from the autonomous vehicle but in a path where the LOS is constant. In order to solve this issue recent methods rely on performing self maneuvers \cite{kochenderfer2008hazard} to estimate the distant to the obstacle and make a decision based on the relative position and velocity estimate. The main drawback of these methods is that when acquiring LOS rate from a camera many objects may appear in the field of view causing an excessive deviation from the mission to perform these identification maneuvers. % In addition, in the case of a critical time coordinated mission every maneuvers affects the outcome of the mission and is undesired, unless there is a critical need to avoid an object.
+
+This work proposes a novel method for reducing the false positives in detected collisions and thereby providing an implementable collision detection method without relying on path deviations and identification maneuvers. Our algorithm is based on acquiring additional information already available in the video imagery. The work of \cite{lee1976theory},\cite{lee1980optic} describe an expansion rate using the obstacle’s image, which can be computed in real time to identify if the obstacle is approaching or moving away from the vehicle. Since collision is only possible when the obstacle is approaching the vehicle, this information is taken into account together with LOS rate threshold condition to consider probable collision candidates.
+
+The detection method will be validated by using Monte Carlo simulation for an extensive collision scenarios, vehicles trajectories and initial conditions. Further, validation and real time evaluation will be carried out on mobile ground robots equipment equipped with low resolution video cameras.
+\section{Acknowledgments}
+\label{sec:Acknowledgments}
+This work has been supported in part by AFOSR and NASA.
+
+\bibliographystyle{unsrt}
+\bibliography{CAS_bib_V2}
+\end{document}
+
