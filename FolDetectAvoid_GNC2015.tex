@@ -75,6 +75,7 @@
 \author{
    Thiago Marinho\thanks{Doctoral Student, Dept. of Mechanical Science and Engineering,Student Member AIAA, marinho@illinois.edu.}~,
    Arun Lakshmanan\thanks{Master Student, Dept. of Aerospace Engineering,Student Member AIAA lakshma2@illinois.edu.}~,
+   Robert Mitchell Jones\thanks{Master Student,  Dept. of Mechanical Science and Engineering,Student Member AIAA rmjones7@illinois.edu.}~,
     Venanzio Cichella\thanks{Doctoral Student, Dept. of Mechanical Science and Engineering, Student Member AIAA,cichell2@illinois.edu.}~,
     Naira Hovakimyan\thanks{Professor, Dept. of Mechanical Science and Engineering, Associate Fellow AIAA
     nhovakim@illinois.edu.}\\
@@ -95,7 +96,7 @@
 \begin{abstract}
 %==============================================================================%
 
-This paper addresses the problem of collision detection for unmanned vehicles. The algorithm relies solely on the line-of-sight angle measurement, which can be obtained from an inertial measurement unit and a gimbaled camera mounted onboard the vehicle. Under given conditions on the estimated line-of-sight rate, the algorithm is capable of predicting whether a collision is likely to occur. The proposed solution is intended to be integrated with a collision avoidance strategy, thus ensuring that the autonomous vehicles can avert collision with cooperative and uncooperative obstacles. This work aims at providing a solution to the detection problem for small low-cost unmanned aerial platforms, which are not equipped with sensors capable of measuring data such as position and velocity of the obstacle.
+This paper presents a unified approach to addresses the problem of collision avoidance and detection for low-cost unmanned vehicles that rely solely on monocular vision for sensing. The proposed method relies on the line-of-sight angle measurement, which can be obtained from an inertial measurement unit and a gimbaled camera mounted onboard the vehicle. Under given conditions on the estimated line-of-sight rate, the algorithm is capable of predicting whether a collision is likely to occur and perform a collision avoidance maneuver, thus ensuring that the autonomous vehicles can avert collision with cooperative and uncooperative obstacles. This work aims at presenting the complete implementation of the collision avoidance system on low cost ground robots, including the computer vision algorithm for obstacle detection, the path following algorithm and the detection and avoidance strategy. Simulation and experiments are carried to ensure validity of the proposed solution.
 \end{abstract}
 
 
