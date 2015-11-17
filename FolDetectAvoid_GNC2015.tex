@@ -134,10 +134,11 @@ The detection method will be validated by using Monte Carlo simulation for an ex
 
 \section{Problem Formulation}
 
-
+
+
 In this section we present the objective of the autonomous ground robot and the different subsystems that form the integrated approach. Let's consider a ground robot that is performing an autonomous task represented by tracking a certain trajectory. An attached monocular camera mounted on a pan angle gimbal continuously searches for obstacles. 
 \begin{asm} \label{detRange}
-	Let $d(t) \in \mathbb{R}$ define the distance from the robot to the obstacle at a time $t$. It is assumed that the monocular vision camera only detects objects when $d(t) < R$, where $R$ is the detection radius.
+	Let $d(t) \in \mathbb{R}$ define the distance from the robot to the obstacle at a time $t$. It is assumed that the monocular vision camera only detects objects when $d(t) < R$, where $R$ is the detection radius. It is also assumed that the initial distance is larger that the safety distance, i.e. $d(t_0) > d_{safe}$. 
 \end{asm}
 
 Once the obstacle enters the detection radius $R$, a computer vision system immediately starts tracking the position of the obstacle on the camera's field of view. A pan gimbal device uses the $x$ coordinates of the camera's image to track the obstacle and center the obstacle in the video frame. With the gimbal's angle and the video feed, we are able to measure $\lambda$, the LOS angle from the robot to the obstacle. 
@@ -166,6 +167,10 @@ An obstacle in the detection range of the robot is not necessarily a collision t
 \subsection{Vision and Obstacle Tracking}
 
 \subsection{Detection}
+
+The analysis and prediction of a collision is  done in relative frame.  Consider the relative velocity, two dimensional geometric formulation for collision avoidance in Figure X. The relative velocity between the 
+
+The necessary condition for collision is having the relative velocity vector inside a collision code.
 
 \section{Collision Avoidance}
 
